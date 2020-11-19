@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="sql7376513@sql7.freemysqlhosting.net" uuid="0874a6b4-53e1-4bd6-936b-4f5f62db3134">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7376513</jdbc-url>
+    </data-source>
+  </component>
+</project>
