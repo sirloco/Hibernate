@@ -1,15 +1,16 @@
 package accesodatos;
 
-import javax.persistence.*;
-import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class Piezas {
     private String codigo;
     private String nombre;
-    private double precio;
+    private String precio;
     private String descripcion;
-    private Collection<Gestion> gestionsByCodigo;
 
     @Id
     @Column(name = "codigo", nullable = false, length = 6)
@@ -32,17 +33,17 @@ public class Piezas {
     }
 
     @Basic
-    @Column(name = "precio", nullable = false, precision = 0)
-    public double getPrecio() {
+    @Column(name = "precio", nullable = false, length = 20)
+    public String getPrecio() {
         return precio;
     }
 
-    public void setPrecio(double precio) {
+    public void setPrecio(String precio) {
         this.precio = precio;
     }
 
     @Basic
-    @Column(name = "descripcion", nullable = true, length = -1)
+    @Column(name = "descripcion", nullable = false, length = -1)
     public String getDescripcion() {
         return descripcion;
     }
@@ -58,9 +59,9 @@ public class Piezas {
 
         Piezas piezas = (Piezas) o;
 
-        if (Double.compare(piezas.precio, precio) != 0) return false;
         if (codigo != null ? !codigo.equals(piezas.codigo) : piezas.codigo != null) return false;
         if (nombre != null ? !nombre.equals(piezas.nombre) : piezas.nombre != null) return false;
+        if (precio != null ? !precio.equals(piezas.precio) : piezas.precio != null) return false;
         if (descripcion != null ? !descripcion.equals(piezas.descripcion) : piezas.descripcion != null) return false;
 
         return true;
@@ -68,22 +69,10 @@ public class Piezas {
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = codigo != null ? codigo.hashCode() : 0;
+        int result = codigo != null ? codigo.hashCode() : 0;
         result = 31 * result + (nombre != null ? nombre.hashCode() : 0);
-        temp = Double.doubleToLongBits(precio);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (precio != null ? precio.hashCode() : 0);
         result = 31 * result + (descripcion != null ? descripcion.hashCode() : 0);
         return result;
-    }
-
-    @OneToMany(mappedBy = "piezasByCodpieza")
-    public Collection<Gestion> getGestionsByCodigo() {
-        return gestionsByCodigo;
-    }
-
-    public void setGestionsByCodigo(Collection<Gestion> gestionsByCodigo) {
-        this.gestionsByCodigo = gestionsByCodigo;
     }
 }

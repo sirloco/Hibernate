@@ -1,14 +1,17 @@
 package accesodatos;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class Gestion {
     private int id;
-    private double cantidad;
-    private Proveedores proveedoresByCodproveedor;
-    private Piezas piezasByCodpieza;
-    private Proyectos proyectosByCodproyecto;
+    private String codproveedor;
+    private String codpieza;
+    private String codproyecto;
+    private Double cantidad;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -21,12 +24,42 @@ public class Gestion {
     }
 
     @Basic
-    @Column(name = "cantidad", nullable = false, precision = 0)
-    public double getCantidad() {
+    @Column(name = "codproveedor", nullable = false, length = 6)
+    public String getCodproveedor() {
+        return codproveedor;
+    }
+
+    public void setCodproveedor(String codproveedor) {
+        this.codproveedor = codproveedor;
+    }
+
+    @Basic
+    @Column(name = "codpieza", nullable = false, length = 6)
+    public String getCodpieza() {
+        return codpieza;
+    }
+
+    public void setCodpieza(String codpieza) {
+        this.codpieza = codpieza;
+    }
+
+    @Basic
+    @Column(name = "codproyecto", nullable = false, length = 6)
+    public String getCodproyecto() {
+        return codproyecto;
+    }
+
+    public void setCodproyecto(String codproyecto) {
+        this.codproyecto = codproyecto;
+    }
+
+    @Basic
+    @Column(name = "cantidad", nullable = true, precision = 0)
+    public Double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(double cantidad) {
+    public void setCantidad(Double cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -38,48 +71,22 @@ public class Gestion {
         Gestion gestion = (Gestion) o;
 
         if (id != gestion.id) return false;
-        if (Double.compare(gestion.cantidad, cantidad) != 0) return false;
+        if (codproveedor != null ? !codproveedor.equals(gestion.codproveedor) : gestion.codproveedor != null)
+            return false;
+        if (codpieza != null ? !codpieza.equals(gestion.codpieza) : gestion.codpieza != null) return false;
+        if (codproyecto != null ? !codproyecto.equals(gestion.codproyecto) : gestion.codproyecto != null) return false;
+        if (cantidad != null ? !cantidad.equals(gestion.cantidad) : gestion.cantidad != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = id;
-        temp = Double.doubleToLongBits(cantidad);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        int result = id;
+        result = 31 * result + (codproveedor != null ? codproveedor.hashCode() : 0);
+        result = 31 * result + (codpieza != null ? codpieza.hashCode() : 0);
+        result = 31 * result + (codproyecto != null ? codproyecto.hashCode() : 0);
+        result = 31 * result + (cantidad != null ? cantidad.hashCode() : 0);
         return result;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "codproveedor", referencedColumnName = "codigo", nullable = false)
-    public Proveedores getProveedoresByCodproveedor() {
-        return proveedoresByCodproveedor;
-    }
-
-    public void setProveedoresByCodproveedor(Proveedores proveedoresByCodproveedor) {
-        this.proveedoresByCodproveedor = proveedoresByCodproveedor;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "codpieza", referencedColumnName = "codigo", nullable = false)
-    public Piezas getPiezasByCodpieza() {
-        return piezasByCodpieza;
-    }
-
-    public void setPiezasByCodpieza(Piezas piezasByCodpieza) {
-        this.piezasByCodpieza = piezasByCodpieza;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "codproyecto", referencedColumnName = "codigo", nullable = false)
-    public Proyectos getProyectosByCodproyecto() {
-        return proyectosByCodproyecto;
-    }
-
-    public void setProyectosByCodproyecto(Proyectos proyectosByCodproyecto) {
-        this.proyectosByCodproyecto = proyectosByCodproyecto;
     }
 }
