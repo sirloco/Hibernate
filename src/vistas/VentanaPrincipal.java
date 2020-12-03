@@ -56,6 +56,16 @@ public class VentanaPrincipal extends JFrame {
         provConsMenu.add(provConsMenuDirItem);
 
         menuBar.add(proveedores);
+        
+
+        provGesMenuItem.addActionListener((event) -> {
+
+            VentanaProveedores vpro = new VentanaProveedores();
+
+            vpro.setVisible(true);
+
+
+        });
 
         //////////////////////////// menu piezas/////////////////////////////////////////////////////////////////////
 
