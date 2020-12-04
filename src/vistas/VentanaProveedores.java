@@ -10,9 +10,10 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.query.Query;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+
 
 public class VentanaProveedores extends JFrame {
     private JPanel panel1;
@@ -29,7 +30,22 @@ public class VentanaProveedores extends JFrame {
     private JButton bEliminar;
     private JButton bModificar;
     private JButton bInsertar;
-    private JTable tListado;
+    private JPanel jpListaPro;
+    private JTextField jtCodigo;
+    private JTextField jtNombre;
+    private JTextField jtApe;
+    private JTextField jtDireccion;
+    private JButton bSiguiente;
+    private JButton bBaja;
+    private JButton bPrimero;
+    private JButton bAtras;
+    private JButton bUltimo;
+    private JLabel lPrimero;
+    private JLabel lUltimo;
+    private JButton ejecutarConsultaButton;
+
+    List<Proveedores> proveedores;
+
 
     // TODO Auto-generated method stub
     SessionFactory sesion = HibernateUtil.getSessionFactory();
@@ -38,11 +54,148 @@ public class VentanaProveedores extends JFrame {
 
         add(panel1);
 
-        setSize(500, 300);
+        setSize(500, 400);
+
 
         bInsertar.addActionListener(e -> insertarProveedor());// BOTON INSERTAR PROVEEDOR //
         bLimpiar.addActionListener(e -> limpiarProveedor());// BOTON LIMPIAR FORMULARIO //
+        ejecutarConsultaButton.addActionListener(e -> traeProveedores());// Boton Mostrar listado proveedores //
+        bPrimero.addActionListener(e -> primerProveedor()); //Primera posicion de la lista //
+        bUltimo.addActionListener(e -> ultimoProveedor()); // ultimo registro de proveedores //
+        bEliminar.addActionListener(e -> eliminaProveedor(jtCod.getText())); // ELimina proveedor
 
+        bBaja.addActionListener(e -> { // ELimina proveedor
+
+            eliminaProveedor(jtCodigo.getText());
+
+            traeProveedores();
+        /*    if (proveedores.size() > 0)
+                ponProveedor(proveedores.get(0));
+            else
+                limpiaVentanaIterador();*/
+
+        });
+
+        bAtras.addActionListener(e -> {
+
+            int posicion = Integer.parseInt(lPrimero.getText()) - 1; // se resta uno para ir retrocediendo de 1 en 1
+
+            if (posicion > 0) {
+
+                ponNumeroProveedor(posicion);
+                ponProveedor(proveedores.get(posicion - 1)); // se resta 1 porque van de 0 a n
+            }
+
+
+        });
+        bSiguiente.addActionListener(e -> {
+
+            int posicion = Integer.parseInt(lPrimero.getText()) + 1; // se resta uno para ir avanzando de 1 en 1
+
+            if (posicion < Integer.parseInt(lUltimo.getText()) + 1) {
+
+                ponNumeroProveedor(posicion);
+                ponProveedor(proveedores.get(posicion - 1)); // se resta 1 porque van de 0 a n
+            }
+
+        });
+
+    }
+
+    private void limpiaVentanaIterador() {
+        jtCodigo.setText("");
+        jtNombre.setText("");
+        jtApe.setText("");
+        jtDireccion.setText("");
+        lPrimero.setText("");
+        lUltimo.setText("");
+    }
+
+    private void eliminaProveedor(String codigo) {
+
+        if (!codigo.isEmpty()) {
+
+            Proveedores pro = buscarProveedorCod(codigo);
+
+            if (pro != null) {
+
+                Session session = sesion.openSession();
+
+                Transaction tx = session.beginTransaction();
+
+                String hqlDel = "delete from Proveedores e where e.codigo = :dep";
+
+                Query q = session.createQuery(hqlDel);
+
+                q.setParameter("dep", pro.getCodigo());
+
+                int filasDel = q.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Proveedor " + pro.getNombre() + " Eliminado",
+                        "Info", JOptionPane.INFORMATION_MESSAGE);
+
+
+                tx.commit();
+                session.close();
+
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Codigo Proveedor inexistente",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+
+        } else {
+
+            JOptionPane.showMessageDialog(null, "Codigo Proveedor necesario",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+
+    }
+
+    private void ultimoProveedor() {
+        ponNumeroProveedor(proveedores.size());
+        ponProveedor(proveedores.get(proveedores.size() - 1));
+    }
+
+    private void primerProveedor() {
+        
+        if (proveedores.size() > 0 ) {
+            ponNumeroProveedor(1);
+            ponProveedor(proveedores.get(0));
+        }
+    }
+
+    private void ponProveedor(Proveedores pro) {
+
+        jtCodigo.setText(pro.getCodigo());
+        jtNombre.setText(pro.getNombre());
+        jtApe.setText(pro.getApellidos());
+        jtDireccion.setText(pro.getDireccion());
+    }
+
+
+    private void traeProveedores() {
+
+        Session session = sesion.openSession();
+
+        Query q = session.createQuery("from Proveedores");
+
+        proveedores = q.list();
+
+        ponNumeroProveedor(1);
+
+        lUltimo.setText(proveedores.size() > 0 ? String.valueOf(proveedores.size()) : "");
+
+        session.close();
+
+        primerProveedor();
+    }
+
+    private void ponNumeroProveedor(int numero) {// Numerito de identificador -> 1 /// 7
+
+        if (proveedores.size() > 0) lPrimero.setText(String.valueOf(numero));
     }
 
     private Proveedores buscarProveedorCod(String cod) {
@@ -95,7 +248,7 @@ public class VentanaProveedores extends JFrame {
         //todo validaciones
         Proveedores p = buscarProveedorCod(codigo);
 
-        if (p == null) {
+        if (p == null || !codigo.isEmpty()) {
 
             Proveedores pro = new Proveedores();
 
@@ -130,11 +283,16 @@ public class VentanaProveedores extends JFrame {
             session.close();
             //System.exit(0);
         }
-        else{
 
+        if (codigo.isEmpty())
+
+            JOptionPane.showMessageDialog(null, "Id Vacio",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (p != null)
             JOptionPane.showMessageDialog(null, "Id de proveedor ya existe",
                     "Error", JOptionPane.ERROR_MESSAGE);
 
-        }
     }
 }
+

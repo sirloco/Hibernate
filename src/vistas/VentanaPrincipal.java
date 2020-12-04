@@ -7,17 +7,17 @@ import java.net.URL;
 public class VentanaPrincipal extends JFrame {
 
     private JPanel panel1;
-
+    private JLabel lFondo;
 
     public VentanaPrincipal() {
+
+        lFondo.setIcon(new ImageIcon("fondo.PNG"));
 
         add(panel1);
 
         crearMenu();
 
-        setSize(1000, 500);
-
-
+        setSize(700, 500);
 
     }
 
@@ -56,14 +56,12 @@ public class VentanaPrincipal extends JFrame {
         provConsMenu.add(provConsMenuDirItem);
 
         menuBar.add(proveedores);
-        
 
         provGesMenuItem.addActionListener((event) -> {
 
             VentanaProveedores vpro = new VentanaProveedores();
 
             vpro.setVisible(true);
-
 
         });
 
