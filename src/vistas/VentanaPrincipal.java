@@ -65,6 +65,15 @@ public class VentanaPrincipal extends JFrame {
 
         });
 
+        provConsMenuCodItem.addActionListener((event) -> {
+
+            VentanaConsultaProCodigo vconpro = new VentanaConsultaProCodigo();
+
+            vconpro.setVisible(true);
+
+        });
+
+
         //////////////////////////// menu piezas/////////////////////////////////////////////////////////////////////
 
         var piezas = new JMenu("Piezas"); //Nombre del menu

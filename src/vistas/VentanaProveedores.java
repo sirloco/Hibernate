@@ -56,23 +56,19 @@ public class VentanaProveedores extends JFrame {
 
         setSize(500, 400);
 
-
         bInsertar.addActionListener(e -> insertarProveedor());// BOTON INSERTAR PROVEEDOR //
         bLimpiar.addActionListener(e -> limpiarProveedor());// BOTON LIMPIAR FORMULARIO //
         ejecutarConsultaButton.addActionListener(e -> traeProveedores());// Boton Mostrar listado proveedores //
         bPrimero.addActionListener(e -> primerProveedor()); //Primera posicion de la lista //
         bUltimo.addActionListener(e -> ultimoProveedor()); // ultimo registro de proveedores //
         bEliminar.addActionListener(e -> eliminaProveedor(jtCod.getText())); // ELimina proveedor
+        bModificar.addActionListener(e -> modificaProveedor()); // Actualiza Proveedor
 
         bBaja.addActionListener(e -> { // ELimina proveedor
 
             eliminaProveedor(jtCodigo.getText());
 
             traeProveedores();
-        /*    if (proveedores.size() > 0)
-                ponProveedor(proveedores.get(0));
-            else
-                limpiaVentanaIterador();*/
 
         });
 
@@ -99,6 +95,45 @@ public class VentanaProveedores extends JFrame {
             }
 
         });
+
+    }
+
+    private void modificaProveedor() {
+
+        Session session = sesion.openSession();
+
+        Transaction tx = session.beginTransaction();
+
+        String codigo = jtCod.getText();
+        String nombre = jtNom.getText();
+        String apellidos = jtApellidos.getText();
+        String direccion = jtDir.getText();
+
+        Proveedores pro = buscarProveedorCod(codigo);
+
+        if (pro != null) {
+
+            Proveedores proveedor = new Proveedores();
+
+            proveedor.setCodigo(codigo);
+            proveedor.setNombre(nombre);
+            proveedor.setApellidos(apellidos);
+            proveedor.setDireccion(direccion);
+
+            session.update(proveedor);
+
+            tx.commit();
+
+            JOptionPane.showMessageDialog(null, "Proveedor " + proveedor.getNombre() + " Actiualizado",
+                    "Info", JOptionPane.INFORMATION_MESSAGE);
+
+
+        }else{
+            JOptionPane.showMessageDialog(null, "Proveedor No localizado",
+                    "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        session.close();
 
     }
 
@@ -134,7 +169,6 @@ public class VentanaProveedores extends JFrame {
                 JOptionPane.showMessageDialog(null, "Proveedor " + pro.getNombre() + " Eliminado",
                         "Info", JOptionPane.INFORMATION_MESSAGE);
 
-
                 tx.commit();
                 session.close();
 
@@ -143,7 +177,6 @@ public class VentanaProveedores extends JFrame {
                 JOptionPane.showMessageDialog(null, "Codigo Proveedor inexistente",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-
 
         } else {
 
@@ -160,8 +193,8 @@ public class VentanaProveedores extends JFrame {
     }
 
     private void primerProveedor() {
-        
-        if (proveedores.size() > 0 ) {
+
+        if (proveedores.size() > 0) {
             ponNumeroProveedor(1);
             ponProveedor(proveedores.get(0));
         }
@@ -174,7 +207,6 @@ public class VentanaProveedores extends JFrame {
         jtApe.setText(pro.getApellidos());
         jtDireccion.setText(pro.getDireccion());
     }
-
 
     private void traeProveedores() {
 
