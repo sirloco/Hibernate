@@ -7,11 +7,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.TransientPropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
-import org.hibernate.query.Query;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -137,15 +134,6 @@ public class VentanaProveedores extends JFrame {
 
     }
 
-    private void limpiaVentanaIterador() {
-        jtCodigo.setText("");
-        jtNombre.setText("");
-        jtApe.setText("");
-        jtDireccion.setText("");
-        lPrimero.setText("");
-        lUltimo.setText("");
-    }
-
     private void eliminaProveedor(String codigo) {
 
         if (!codigo.isEmpty()) {
@@ -158,13 +146,10 @@ public class VentanaProveedores extends JFrame {
 
                 Transaction tx = session.beginTransaction();
 
-                String hqlDel = "delete from Proveedores e where e.codigo = :dep";
+                //Se crea la sentencia
+                String hqlDel = String.format("delete from Proveedores e where e.codigo = '%s'",pro.getCodigo());
 
-                Query q = session.createQuery(hqlDel);
-
-                q.setParameter("dep", pro.getCodigo());
-
-                int filasDel = q.executeUpdate();
+                session.createQuery(hqlDel).executeUpdate();
 
                 JOptionPane.showMessageDialog(null, "Proveedor " + pro.getNombre() + " Eliminado",
                         "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -212,9 +197,18 @@ public class VentanaProveedores extends JFrame {
 
         Session session = sesion.openSession();
 
-        Query q = session.createQuery("from Proveedores");
+        //Se crea la sentencia
+        String hql = String.format("from %s","Proveedores");
 
-        proveedores = q.list();
+        List<Proveedores> listaProveedores = new LinkedList<>();
+
+        // Se crea un linked list porque asi lo que devuelve la query no se queja de que lo almacena en una coleccion
+        // que puede almacenar elemenos repetidos es una chorrada pero asi no me sale el warning
+        for (Object o : session.createQuery(hql).list()) {
+            listaProveedores.add((Proveedores) o );
+        }
+
+        proveedores = listaProveedores;
 
         ponNumeroProveedor(1);
 
@@ -234,21 +228,11 @@ public class VentanaProveedores extends JFrame {
 
         Session session = sesion.openSession();
 
-        //Muestra el apellido y oficio del empleado con número 7369
+        String hql = String.format("from Proveedores where codigo = '%s'",cod);
 
-        //Se crea la sentencia
-        String hql = "from Proveedores where codigo = :cod";
+        Proveedores pro = (Proveedores) session.createQuery(hql).uniqueResult();
 
-        //Se lanza la sentencia
-        Query q = session.createQuery(hql);
-
-        //Se pasa el valor recibido
-        q.setParameter("cod", cod);
-
-        Proveedores pro = (Proveedores) q.uniqueResult(); //uniqueResult() se utiliza cuando sabemos que nos
-
-        // va a devolver un único registro
-        //System.out.format(" %s, %s \n", pro.getNombre(), pro.getApellidos());
+        System.out.println(pro);
 
         session.close();
 
@@ -280,7 +264,7 @@ public class VentanaProveedores extends JFrame {
         //todo validaciones
         Proveedores p = buscarProveedorCod(codigo);
 
-        if (p == null || !codigo.isEmpty()) {
+        if (p == null && !codigo.isEmpty()) {
 
             Proveedores pro = new Proveedores();
 

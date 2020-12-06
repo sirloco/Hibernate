@@ -58,19 +58,23 @@ public class VentanaPrincipal extends JFrame {
         menuBar.add(proveedores);
 
         provGesMenuItem.addActionListener((event) -> {
-
             VentanaProveedores vpro = new VentanaProveedores();
-
             vpro.setVisible(true);
-
         });
 
         provConsMenuCodItem.addActionListener((event) -> {
-
             VentanaConsultaProCodigo vconpro = new VentanaConsultaProCodigo();
-
             vconpro.setVisible(true);
+        });
 
+        provConsMenuNomItem.addActionListener((event) -> {
+            VentanaConsultaProNom vconpronom = new VentanaConsultaProNom();
+            vconpronom.setVisible(true);
+        });
+
+        provConsMenuDirItem.addActionListener((event) -> {
+            VentanaConsultaProDir vconprodir = new VentanaConsultaProDir();
+            vconprodir.setVisible(true);
         });
 
 
