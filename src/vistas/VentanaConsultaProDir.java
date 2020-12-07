@@ -42,7 +42,7 @@ public class VentanaConsultaProDir extends JFrame{
 
     private void rellenaEtiquetas() {
 
-        if (listaProveedores.size() > 0) {
+        if (listaProveedores.size() > 0 && cbDireccion.getSelectedIndex() > -1) {
 
             lCodigo.setText(listaProveedores.get(cbDireccion.getSelectedIndex()).getCodigo());
             lNombre.setText(listaProveedores.get(cbDireccion.getSelectedIndex()).getNombre());
@@ -68,7 +68,7 @@ public class VentanaConsultaProDir extends JFrame{
 
             cbDireccion.removeAllItems();
             for (Proveedores proveedores : listaProveedores) {
-                cbDireccion.addItem(proveedores.getCodigo());
+                cbDireccion.addItem(proveedores.getDireccion());
             }
 
         } else {

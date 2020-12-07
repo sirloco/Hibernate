@@ -32,7 +32,6 @@ public class VentanaConsultaProNom extends JFrame {
         setSize(700, 400);
 
         bNombre.addActionListener(e -> consultaPorNombre(jtNom.getText()));
-
         cbNombre.addActionListener(e -> rellenaEtiquetas());
 
     }
@@ -40,7 +39,7 @@ public class VentanaConsultaProNom extends JFrame {
 
     private void rellenaEtiquetas() {
 
-        if (listaProveedores.size() > 0) {
+        if (listaProveedores.size() > 0 && cbNombre.getSelectedIndex() > -1) {
 
             lCodigo.setText(listaProveedores.get(cbNombre.getSelectedIndex()).getCodigo());
             lNombre.setText(listaProveedores.get(cbNombre.getSelectedIndex()).getNombre());
@@ -64,12 +63,9 @@ public class VentanaConsultaProNom extends JFrame {
 
         if (listaProveedores.size() > 0) {
 
-
-            int indice = cbNombre.getSelectedIndex();
-
             cbNombre.removeAllItems();
             for (Proveedores proveedores : listaProveedores) {
-                cbNombre.addItem(proveedores.getCodigo());
+                cbNombre.addItem(proveedores.getNombre());
             }
 
         } else {

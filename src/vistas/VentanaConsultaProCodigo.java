@@ -34,7 +34,7 @@ public class VentanaConsultaProCodigo extends JFrame {
 
     private void rellenaEtiquetas() {
 
-        if (listaCodigos.size() > 0){
+        if (listaCodigos.size() > 0 && cbCodigo.getSelectedIndex() > -1){
 
             lCodigo.setText(listaCodigos.get(cbCodigo.getSelectedIndex()).getCodigo());
             lNombre.setText(listaCodigos.get(cbCodigo.getSelectedIndex()).getNombre());
@@ -53,6 +53,7 @@ public class VentanaConsultaProCodigo extends JFrame {
         String hql = String.format("from Proveedores where codigo like '%%%s%%'", cod);
 
 
+        listaCodigos.clear();
         for (Object o : session.createQuery(hql).list()) {
             listaCodigos.add((Proveedores) o);
         }
