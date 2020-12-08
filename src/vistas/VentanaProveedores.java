@@ -41,7 +41,7 @@ public class VentanaProveedores extends JFrame {
     private JLabel lUltimo;
     private JButton ejecutarConsultaButton;
 
-    List<Proveedores> proveedores;
+    List<Proveedores> proveedores = new LinkedList<>();
 
     SessionFactory sesion = HibernateUtil.getSessionFactory();
 
@@ -198,15 +198,13 @@ public class VentanaProveedores extends JFrame {
         //Se crea la sentencia
         String hql = String.format("from %s","Proveedores");
 
-        List<Proveedores> listaProveedores = new LinkedList<>();
+        proveedores.clear();
 
         // Se crea un linked list porque asi lo que devuelve la query no se queja de que lo almacena en una coleccion
         // que puede almacenar elemenos repetidos es una chorrada pero asi no me sale el warning
         for (Object o : session.createQuery(hql).list()) {
-            listaProveedores.add((Proveedores) o );
+            proveedores.add((Proveedores) o );
         }
-
-        proveedores = listaProveedores;
 
         ponNumeroProveedor(1);
 

@@ -2,25 +2,27 @@ package vistas;
 
 import accesodatos.HibernateUtil;
 import accesodatos.Piezas;
+import accesodatos.Proyectos;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.TransientPropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VentanaPiezas extends JFrame {
-
+public class VentanaProyectos extends JFrame {
+    private JPanel jpPanel1;
     private JPanel jpPrincipal;
     private JTabbedPane tabbedPane1;
     private JPanel jpGesProv;
     private JPanel jpGestionProv;
     private JTextField jtCod;
     private JTextField jtNom;
-    private JTextField jtPrecio;
-    private JTextField jtDes;
+    private JTextField jtCiudad;
     private JButton bLimpiar;
     private JButton bEliminar;
     private JButton bModificar;
@@ -29,8 +31,7 @@ public class VentanaPiezas extends JFrame {
     private JPanel jpListaPro;
     private JTextField jtCodigo;
     private JTextField jtNombre;
-    private JTextField jtApe;
-    private JTextField jtDireccion;
+    private JTextField jtCiu;
     private JButton bSiguiente;
     private JButton bBaja;
     private JButton bPrimero;
@@ -39,31 +40,29 @@ public class VentanaPiezas extends JFrame {
     private JLabel lPrimero;
     private JLabel lUltimo;
     private JButton ejecutarConsultaButton;
-    private JPanel jpPanel1;
 
-    List<Piezas> piezas = new LinkedList<>();
+    List<Proyectos> proyectos = new LinkedList<>();
 
     SessionFactory sesion = HibernateUtil.getSessionFactory();
 
-    public VentanaPiezas() {
-
+    public VentanaProyectos() {
         add(jpPanel1);
 
         setSize(500, 400);
 
-        bInsertar.addActionListener(e -> insertarPieza());// BOTON INSERTAR PIEZA //
-        bLimpiar.addActionListener(e -> limpiarPieza());// BOTON LIMPIAR FORMULARIO //
-        ejecutarConsultaButton.addActionListener(e -> traePiezas());// Boton Mostrar listado piezas //
-        bPrimero.addActionListener(e -> primerPieza()); //Primera posicion de la lista //
-        bUltimo.addActionListener(e -> ultimaPieza()); // ultimo registro de piezas //
-        bEliminar.addActionListener(e -> eliminaPieza(jtCod.getText())); // ELimina pieza
-        bModificar.addActionListener(e -> modificaPieza()); // Actualiza Pieza
+        bInsertar.addActionListener(e -> insertarProyecto());// BOTON INSERTAR PROYECTO //
+        bLimpiar.addActionListener(e -> limpiarProyecto());// BOTON LIMPIAR FORMULARIO //
+        ejecutarConsultaButton.addActionListener(e -> traeProyecto());// Boton Mostrar listado proyecto //
+        bPrimero.addActionListener(e -> primerProyecto()); //Primera posicion de la lista //
+        bUltimo.addActionListener(e -> ultimaProyecto()); // ultimo registro de proyectos //
+        bEliminar.addActionListener(e -> eliminaProyecto(jtCod.getText())); // ELimina proyecto
+        bModificar.addActionListener(e -> modificaProyecto()); // Actualiza Pieza
 
-        bBaja.addActionListener(e -> { // ELimina pieza
+        bBaja.addActionListener(e -> { // ELimina proyecto
 
-            eliminaPieza(jtCodigo.getText());
+            eliminaProyecto(jtCodigo.getText());
 
-            traePiezas();
+            traeProyecto();
 
         });
 
@@ -73,8 +72,8 @@ public class VentanaPiezas extends JFrame {
 
             if (posicion > 0) {
 
-                ponNumeroPieza(posicion);
-                ponPieza(piezas.get(posicion - 1)); // se resta 1 porque van de 0 a n
+                ponNumeroProyecto(posicion);
+                ponProyecto(proyectos.get(posicion - 1)); // se resta 1 porque van de 0 a n
             }
 
 
@@ -85,94 +84,88 @@ public class VentanaPiezas extends JFrame {
 
             if (posicion < Integer.parseInt(lUltimo.getText()) + 1) {
 
-                ponNumeroPieza(posicion);
-                ponPieza(piezas.get(posicion - 1)); // se resta 1 porque van de 0 a n
+                ponNumeroProyecto(posicion);
+                ponProyecto(proyectos.get(posicion - 1)); // se resta 1 porque van de 0 a n
             }
 
         });
 
     }
 
-    private void ponPieza(Piezas pieza) {
-        jtCodigo.setText(pieza.getCodigo());
-        jtNombre.setText(pieza.getNombre());
-        jtApe.setText(pieza.getPrecio());
-        jtDireccion.setText(pieza.getDescripcion());
+    private void ponProyecto(Proyectos proyecto) {
+        jtCodigo.setText(proyecto.getCodigo());
+        jtNombre.setText(proyecto.getNombre());
+        jtCiu.setText(proyecto.getCiudad());
     }
 
-    private void ponNumeroPieza(int numero) {
-        if (piezas.size() > 0) lPrimero.setText(String.valueOf(numero));
+    private void ponNumeroProyecto(int numero) {
+        if (proyectos.size() > 0) lPrimero.setText(String.valueOf(numero));
     }
 
-    private void modificaPieza() {
-
+    private void modificaProyecto() {
         Session session = sesion.openSession();
 
         Transaction tx = session.beginTransaction();
 
         String codigo = jtCod.getText();
         String nombre = jtNom.getText();
-        String precio = jtPrecio.getText();
-        String descripcion = jtDes.getText();
+        String ciudad = jtCiudad.getText();
 
-        Piezas pie = buscarPiezaCod(codigo);
+        Proyectos pro = buscarProyectoCod(codigo);
 
-        if (pie != null) {
+        if (pro != null) {
 
-            Piezas pieza = new Piezas();
+            Proyectos proyecto = new Proyectos();
 
-            pieza.setCodigo(codigo);
-            pieza.setNombre(nombre);
-            pieza.setPrecio(precio);
-            pieza.setDescripcion(descripcion);
+            proyecto.setCodigo(codigo);
+            proyecto.setNombre(nombre);
+            proyecto.setCiudad(ciudad);
 
-            session.update(pieza);
+            session.update(proyecto);
 
             tx.commit();
 
-            JOptionPane.showMessageDialog(null, "Pieza " + pieza.getNombre() + " Actiualizada",
+            JOptionPane.showMessageDialog(null, "Proyecto " + proyecto.getNombre() + " Actiualizado",
                     "Info", JOptionPane.INFORMATION_MESSAGE);
 
 
         } else {
-            JOptionPane.showMessageDialog(null, "Pieza No localizada",
+            JOptionPane.showMessageDialog(null, "Proyecto No localizado",
                     "Error", JOptionPane.INFORMATION_MESSAGE);
         }
 
         session.close();
-
     }
 
-    private Piezas buscarPiezaCod(String cod) {
+    private Proyectos buscarProyectoCod(String cod) {
         Session session = sesion.openSession();
 
-        String hql = String.format("from Piezas where codigo = '%s'", cod);
+        String hql = String.format("from Proyectos where codigo = '%s'", cod);
 
-        Piezas pie = (Piezas) session.createQuery(hql).uniqueResult();
+        Proyectos pro = (Proyectos) session.createQuery(hql).uniqueResult();
 
         session.close();
 
-        return pie;
+        return pro;
     }
 
-    private void eliminaPieza(String codigo) {
-
+    private void eliminaProyecto(String codigo) {
         if (!codigo.isEmpty()) {
 
-            Piezas pie = buscarPiezaCod(codigo);
+            Proyectos pro = buscarProyectoCod(codigo);
 
-            if (pie != null) {
+            if (pro != null) {
 
                 Session session = sesion.openSession();
 
                 Transaction tx = session.beginTransaction();
 
                 //Se crea la sentencia
-                String hqlDel = String.format("delete from Piezas e where e.codigo = '%s'", pie.getCodigo());
+                String hqlDel = String.format("delete from Proyectos e where e.codigo = '%s'", pro.getCodigo());
 
                 session.createQuery(hqlDel).executeUpdate();
 
-                JOptionPane.showMessageDialog(null, "Pieza " + pie.getNombre() + " Eliminada",
+                JOptionPane.showMessageDialog(null, "Proyecto " + pro.getNombre() + " Eliminado",
                         "Info", JOptionPane.INFORMATION_MESSAGE);
 
                 tx.commit();
@@ -180,91 +173,86 @@ public class VentanaPiezas extends JFrame {
 
             } else {
 
-                JOptionPane.showMessageDialog(null, "Codigo Pieza inexistente",
+                JOptionPane.showMessageDialog(null, "Codigo Proyecto inexistente",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } else {
 
-            JOptionPane.showMessageDialog(null, "Codigo Pieza necesario",
+            JOptionPane.showMessageDialog(null, "Codigo Proyecto necesario",
                     "Error", JOptionPane.ERROR_MESSAGE);
 
         }
-
     }
 
-    private void ultimaPieza() {
-        ponNumeroPieza(piezas.size());
-        ponPieza(piezas.get(piezas.size() - 1));
+    private void ultimaProyecto() {
+        ponNumeroProyecto(proyectos.size());
+        ponProyecto(proyectos.get(proyectos.size() - 1));
     }
 
-    private void primerPieza() {
-        if (piezas.size() > 0) {
-            ponNumeroPieza(1);
-            ponPieza(piezas.get(0));
+    private void primerProyecto() {
+        if (proyectos.size() > 0) {
+            ponNumeroProyecto(1);
+            ponProyecto(proyectos.get(0));
         }
     }
 
-    private void traePiezas() {
+    private void traeProyecto() {
         Session session = sesion.openSession();
 
         //Se crea la sentencia
-        String hql = String.format("from %s", "Piezas");
+        String hql = String.format("from %s", "Proyectos");
 
-        piezas.clear();
-
+        proyectos.clear();
         // Se crea un linked list porque asi lo que devuelve la query no se queja de que lo almacena en una coleccion
         // que puede almacenar elemenos repetidos es una chorrada pero asi no me sale el warning
         for (Object o : session.createQuery(hql).list()) {
-            piezas.add((Piezas) o);
+            proyectos.add((Proyectos) o);
         }
 
-        ponNumeroPieza(1);
+        ponNumeroProyecto(1);
 
-        lUltimo.setText(piezas.size() > 0 ? String.valueOf(piezas.size()) : "");
+        lUltimo.setText(proyectos.size() > 0 ? String.valueOf(proyectos.size()) : "");
 
         session.close();
 
-        primerPieza();
+        primerProyecto();
     }
 
-    private void limpiarPieza() {
+    private void limpiarProyecto() {
         jtCod.setText("");
         jtNom.setText("");
-        jtPrecio.setText("");
-        jtDes.setText("");
+        jtCiudad.setText("");
     }
 
-    private void insertarPieza() {
+    private void insertarProyecto() {
         Session session = sesion.openSession();
         Transaction tx = session.beginTransaction();
 
         String codigo = jtCod.getText();
         String nombre = jtNom.getText();
-        String precio = jtPrecio.getText();
-        String descripcion = jtDes.getText();
+        String ciudad = jtCiudad.getText();
 
         //todo validaciones
-        Piezas p = buscarPiezaCod(codigo);
+        Proyectos p = buscarProyectoCod(codigo);
 
         if (p == null && !codigo.isEmpty()) {
 
-            Piezas pie = new Piezas();
+            Proyectos pro = new Proyectos();
 
-            pie.setCodigo(codigo);
-            pie.setNombre(nombre);
-            pie.setPrecio(precio);
-            pie.setDescripcion(descripcion);
+            pro.setCodigo(codigo);
+            pro.setNombre(nombre);
+            pro.setCiudad(ciudad);
 
             try {
 
-                session.save(pie);
+                session.save(pro);
 
                 try {
 
                     tx.commit();
 
-                    JOptionPane.showMessageDialog(null, "Pieza " + pie.getNombre() + " Insertada",
+                    JOptionPane.showMessageDialog(null, "Proyecto " + pro.getNombre() + " Insertado",
                             "Info", JOptionPane.INFORMATION_MESSAGE);
 
                 } catch (ConstraintViolationException e) {
@@ -289,7 +277,7 @@ public class VentanaPiezas extends JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
 
         if (p != null)
-            JOptionPane.showMessageDialog(null, "Id de pieza ya existe",
+            JOptionPane.showMessageDialog(null, "Id de proyecto ya existe",
                     "Error", JOptionPane.ERROR_MESSAGE);
 
     }

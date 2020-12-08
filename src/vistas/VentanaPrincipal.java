@@ -93,20 +93,25 @@ public class VentanaPrincipal extends JFrame {
         pieConsMenu.add(pieConsMenuCodItem);
         pieConsMenu.add(pieConsMenuNomItem);
 
-        pieGesMenuItem.addActionListener((event) ->{
+        pieGesMenuItem.addActionListener((event) -> {
             VentanaPiezas vpie = new VentanaPiezas();
             vpie.setVisible(true);
         });
 
+        pieConsMenuCodItem.addActionListener((event) -> {
+            VentanaConsultaPieCodigo vpieCod = new VentanaConsultaPieCodigo();
+            vpieCod.setVisible(true);
+        });
+
+        pieConsMenuNomItem.addActionListener((event) -> {
+            VentanaConsultaPieNom vpieNom = new VentanaConsultaPieNom();
+            vpieNom.setVisible(true);
+        });
 
         ////////////////////////////////////// menu proyectos /////////////////////////////////////////////////////////
 
         var proyectos = new JMenu("Proyectos"); //Nombre del menu
-        var proGesMenu = new JMenu("Gestión de proyectos"); //Nombre del boton
-        var proGesAltMenuItem = new JMenuItem("Altas"); //Nombre del boton
-        var proGesBajMenuItem = new JMenuItem("Bajas"); //Nombre del boton
-        var proGesModMenuItem = new JMenuItem("Modificaciones"); //Nombre del boton
-        var proGesLisMenuItem = new JMenuItem("Listado"); //Nombre del boton
+        var proGesMenuItem = new JMenuItem("Gestión de proyectos"); //Nombre del boton
 
         var proConsMenu = new JMenu("Consultas de Proyectos"); //Nombre del boton
         var proConsMenuCodItem = new JMenuItem("Por Código"); //Nombre del boton
@@ -115,16 +120,32 @@ public class VentanaPrincipal extends JFrame {
 
         menuBar.add(proyectos);
 
-        proyectos.add(proGesMenu);
-        proGesMenu.add(proGesAltMenuItem);
-        proGesMenu.add(proGesBajMenuItem);
-        proGesMenu.add(proGesModMenuItem);
-        proGesMenu.add(proGesLisMenuItem);
+        proyectos.add(proGesMenuItem);
 
         proyectos.add(proConsMenu);
         proConsMenu.add(proConsMenuCodItem);
         proConsMenu.add(proConsMenuNomItem);
         proConsMenu.add(proConsMenuCiuItem);
+
+        proGesMenuItem.addActionListener((event) -> {
+            VentanaProyectos vproy = new VentanaProyectos();
+            vproy.setVisible(true);
+        });
+
+        proConsMenuCodItem.addActionListener((event) -> {
+            VentanaConsultaProyCod vproycod = new VentanaConsultaProyCod();
+            vproycod.setVisible(true);
+        });
+
+        proConsMenuNomItem.addActionListener((event) -> {
+            VentanaConsultaProyNom vproynom = new VentanaConsultaProyNom();
+            vproynom.setVisible(true);
+        });
+
+        proConsMenuCiuItem.addActionListener((event) -> {
+            VentanaConsultaProyCiu vproyciu = new VentanaConsultaProyCiu();
+            vproyciu.setVisible(true);
+        });
 
         /////////////////////////////////////// menu gestion global////////////////////////////////////////////////////
 
