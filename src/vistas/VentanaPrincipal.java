@@ -1,8 +1,6 @@
 package vistas;
 
 import javax.swing.*;
-import java.awt.*;
-import java.net.URL;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -81,11 +79,7 @@ public class VentanaPrincipal extends JFrame {
         //////////////////////////// menu piezas/////////////////////////////////////////////////////////////////////
 
         var piezas = new JMenu("Piezas"); //Nombre del menu
-        var pieGesMenu = new JMenu("Gestión de piezas"); //Nombre del boton
-        var pieGesAltMenuItem = new JMenuItem("Altas"); //Nombre del boton
-        var pieGesBajMenuItem = new JMenuItem("Bajas"); //Nombre del boton
-        var pieGesModMenuItem = new JMenuItem("Modificaciones"); //Nombre del boton
-        var pieGesLisMenuItem = new JMenuItem("Listado"); //Nombre del boton
+        var pieGesMenuItem = new JMenuItem("Gestión de piezas"); //Nombre del boton
 
         var pieConsMenu = new JMenu("Consultas de piezas"); //Nombre del boton
         var pieConsMenuCodItem = new JMenuItem("Por Código"); //Nombre del boton
@@ -93,15 +87,16 @@ public class VentanaPrincipal extends JFrame {
 
         menuBar.add(piezas);
 
-        piezas.add(pieGesMenu);
-        pieGesMenu.add(pieGesAltMenuItem);
-        pieGesMenu.add(pieGesBajMenuItem);
-        pieGesMenu.add(pieGesModMenuItem);
-        pieGesMenu.add(pieGesLisMenuItem);
+        piezas.add(pieGesMenuItem);
 
         piezas.add(pieConsMenu);
         pieConsMenu.add(pieConsMenuCodItem);
         pieConsMenu.add(pieConsMenuNomItem);
+
+        pieGesMenuItem.addActionListener((event) ->{
+            VentanaPiezas vpie = new VentanaPiezas();
+            vpie.setVisible(true);
+        });
 
 
         ////////////////////////////////////// menu proyectos /////////////////////////////////////////////////////////

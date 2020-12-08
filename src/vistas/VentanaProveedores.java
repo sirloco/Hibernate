@@ -43,8 +43,6 @@ public class VentanaProveedores extends JFrame {
 
     List<Proveedores> proveedores;
 
-
-    // TODO Auto-generated method stub
     SessionFactory sesion = HibernateUtil.getSessionFactory();
 
     public VentanaProveedores() {
@@ -231,8 +229,6 @@ public class VentanaProveedores extends JFrame {
         String hql = String.format("from Proveedores where codigo = '%s'",cod);
 
         Proveedores pro = (Proveedores) session.createQuery(hql).uniqueResult();
-
-        System.out.println(pro);
 
         session.close();
 
