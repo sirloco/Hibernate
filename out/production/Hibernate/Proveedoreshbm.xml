@@ -17,5 +17,11 @@
         <property name="direccion">
             <column name="direccion" sql-type="varchar(40)" length="40"/>
         </property>
+        <set name="gestionsByCodigo" inverse="true">
+            <key>
+                <column name="codproveedor"/>
+            </key>
+            <one-to-many not-found="ignore" class="accesodatos.Gestion"/>
+        </set>
     </class>
 </hibernate-mapping>

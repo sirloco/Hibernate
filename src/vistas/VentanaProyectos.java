@@ -1,7 +1,6 @@
 package vistas;
 
 import accesodatos.HibernateUtil;
-import accesodatos.Piezas;
 import accesodatos.Proyectos;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,7 +9,6 @@ import org.hibernate.TransientPropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 

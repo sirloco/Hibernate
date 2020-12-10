@@ -1,9 +1,7 @@
 package accesodatos;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Proveedores {
@@ -11,6 +9,7 @@ public class Proveedores {
     private String nombre;
     private String apellidos;
     private String direccion;
+    private Collection<Gestion> gestionsByCodigo;
 
     @Id
     @Column(name = "codigo", nullable = false, length = 6)
@@ -74,5 +73,14 @@ public class Proveedores {
         result = 31 * result + (apellidos != null ? apellidos.hashCode() : 0);
         result = 31 * result + (direccion != null ? direccion.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "proveedoresByCodproveedor")
+    public Collection<Gestion> getGestionsByCodigo() {
+        return gestionsByCodigo;
+    }
+
+    public void setGestionsByCodigo(Collection<Gestion> gestionsByCodigo) {
+        this.gestionsByCodigo = gestionsByCodigo;
     }
 }

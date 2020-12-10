@@ -162,12 +162,23 @@ public class VentanaPrincipal extends JFrame {
         gestGlob.add(gesSumPieMenuItem);
         gestGlob.add(gesEstMenuItem);
 
+        gesPPPMenuItem.addActionListener((event) -> {
+            VentanaPieProvProy vpropieproy = new VentanaPieProvProy();
+            vpropieproy.setVisible(true);
+        });
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        var ayuda = new JMenu("Ayuda"); //Nombre del menu
+        var ayuda = new JMenuItem("Ayuda"); //Nombre del menu
 
         menuBar.add(ayuda);
+
+        /*ayuda.addActionListener((event) -> {
+            VentanaConsultaProyCiu vproyciu = new VentanaConsultaProyCiu();
+            vproyciu.setVisible(true);
+        });*/
+
+
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

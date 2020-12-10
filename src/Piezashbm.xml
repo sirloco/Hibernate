@@ -17,5 +17,11 @@
         <property name="descripcion">
             <column name="descripcion" sql-type="text"/>
         </property>
+        <set name="gestionsByCodigo" inverse="true">
+            <key>
+                <column name="codpieza"/>
+            </key>
+            <one-to-many not-found="ignore" class="accesodatos.Gestion"/>
+        </set>
     </class>
 </hibernate-mapping>

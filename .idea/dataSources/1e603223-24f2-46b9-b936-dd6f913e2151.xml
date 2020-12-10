@@ -906,15 +906,15 @@
       <DataType>float|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <index id="286" parent="277" name="FK__proveedores">
+    <index id="286" parent="277" name="FK_gestion_proveedores">
       <ColNames>codproveedor</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="287" parent="277" name="FK__piezas">
+    <index id="287" parent="277" name="FK_gestion_piezas">
       <ColNames>codpieza</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="288" parent="277" name="FK__proyectos">
+    <index id="288" parent="277" name="FK_gestion_proyectos">
       <ColNames>codproyecto</ColNames>
       <Type>btree</Type>
     </index>
@@ -923,71 +923,92 @@
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="290" parent="278" name="codigo">
+    <foreign-key id="290" parent="277" name="FK_gestion_proveedores">
+      <ColNames>codproveedor</ColNames>
+      <RefTableName>proveedores</RefTableName>
+      <RefColNames>codigo</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="291" parent="277" name="FK_gestion_piezas">
+      <ColNames>codpieza</ColNames>
+      <RefTableName>piezas</RefTableName>
+      <RefColNames>codigo</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="292" parent="277" name="FK_gestion_proyectos">
+      <ColNames>codproyecto</ColNames>
+      <RefTableName>proyectos</RefTableName>
+      <RefColNames>codigo</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="293" parent="278" name="codigo">
       <Position>1</Position>
       <DataType>varchar(6)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="291" parent="278" name="nombre">
+    <column id="294" parent="278" name="nombre">
       <Position>2</Position>
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="292" parent="278" name="precio">
+    <column id="295" parent="278" name="precio">
       <Position>3</Position>
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="293" parent="278" name="descripcion">
+    <column id="296" parent="278" name="descripcion">
       <Position>4</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="294" parent="278" name="PRIMARY">
+    <key id="297" parent="278" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>codigo</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="295" parent="279" name="codigo">
+    <column id="298" parent="279" name="codigo">
       <Position>1</Position>
       <DataType>varchar(6)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="296" parent="279" name="nombre">
+    <column id="299" parent="279" name="nombre">
       <Position>2</Position>
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="297" parent="279" name="apellidos">
+    <column id="300" parent="279" name="apellidos">
       <Position>3</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="298" parent="279" name="direccion">
+    <column id="301" parent="279" name="direccion">
       <Position>4</Position>
       <DataType>varchar(40)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="299" parent="279" name="PRIMARY">
+    <key id="302" parent="279" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>codigo</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="300" parent="280" name="codigo">
+    <column id="303" parent="280" name="codigo">
       <Position>1</Position>
       <DataType>varchar(6)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="301" parent="280" name="nombre">
+    <column id="304" parent="280" name="nombre">
       <Position>2</Position>
       <DataType>varchar(40)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="302" parent="280" name="ciudad">
+    <column id="305" parent="280" name="ciudad">
       <Position>3</Position>
       <DataType>varchar(40)|0s</DataType>
     </column>
-    <key id="303" parent="280" name="PRIMARY">
+    <key id="306" parent="280" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>codigo</ColNames>
       <Primary>1</Primary>

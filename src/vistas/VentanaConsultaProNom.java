@@ -5,9 +5,6 @@ import accesodatos.Proveedores;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

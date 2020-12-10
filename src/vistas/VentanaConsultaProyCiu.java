@@ -5,7 +5,6 @@ import accesodatos.Proyectos;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import javax.swing.*;
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 

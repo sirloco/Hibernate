@@ -8,17 +8,17 @@
         <id name="id">
             <column name="id" sql-type="int"/>
         </id>
-        <property name="codproveedor">
-            <column name="codproveedor" sql-type="varchar(6)" length="6"/>
-        </property>
-        <property name="codpieza">
-            <column name="codpieza" sql-type="varchar(6)" length="6"/>
-        </property>
-        <property name="codproyecto">
-            <column name="codproyecto" sql-type="varchar(6)" length="6"/>
-        </property>
         <property name="cantidad">
             <column name="cantidad" sql-type="float" precision="-1" not-null="true"/>
         </property>
+        <many-to-one name="proveedoresByCodproveedor" class="accesodatos.Proveedores">
+            <column name="codproveedor"/>
+        </many-to-one>
+        <many-to-one name="piezasByCodpieza" class="accesodatos.Piezas">
+            <column name="codpieza"/>
+        </many-to-one>
+        <many-to-one name="proyectosByCodproyecto" class="accesodatos.Proyectos">
+            <column name="codproyecto"/>
+        </many-to-one>
     </class>
 </hibernate-mapping>

@@ -14,5 +14,11 @@
         <property name="ciudad">
             <column name="ciudad" sql-type="varchar(40)" length="40" not-null="true"/>
         </property>
+        <set name="gestionsByCodigo" inverse="true">
+            <key>
+                <column name="codproyecto"/>
+            </key>
+            <one-to-many not-found="ignore" class="accesodatos.Gestion"/>
+        </set>
     </class>
 </hibernate-mapping>
