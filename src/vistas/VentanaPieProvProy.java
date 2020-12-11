@@ -34,7 +34,7 @@ public class VentanaPieProvProy extends JFrame {
     private JTextField jtProyLinea2;
     private JTextField jtCantidad;
     private JPanel jpProyecto;
-    private JComboBox<Integer> cbGestion;
+    private JComboBox<String> cbGestion;
 
     SessionFactory sesion = HibernateUtil.getSessionFactory();
     List<Proyectos> listaProyectos = new LinkedList<>();
@@ -92,35 +92,128 @@ public class VentanaPieProvProy extends JFrame {
             insertaGestion();
         });
         bModificar.addActionListener(e -> {
-            //todo pulsa boton modificar
+            modificaGestion();
         });
         cbGestion.addActionListener(e -> {
-            modificaGestion();
+            rellenaGestion();
         });
     }
 
     private void modificaGestion() {
 
+        Session session = sesion.openSession();
+
+        Transaction tx = session.beginTransaction();
+
+        String codigo = String.valueOf(cbGestion.getSelectedIndex());
+
+        System.out.println(codigo);
+
+        String cantidad = jtCantidad.getText();
+
+        Gestion ges = buscarGestionCod(codigo);
+
+        double cant;
+        try {
+            cant = Double.parseDouble(cantidad);
+
+
+            if (ges != null && cant > 0) {
+
+                Proveedores pro = listaProveedores.get(cbCodigoProv.getSelectedIndex() - 1);
+                Piezas pie = listaPiezas.get(cbPiezas.getSelectedIndex() - 1);
+                Proyectos proy = listaProyectos.get(cbProyecto.getSelectedIndex() - 1);
+
+
+                ges.setPiezasByCodpieza(pie);
+                ges.setProveedoresByCodproveedor(pro);
+                ges.setProyectosByCodproyecto(proy);
+
+                ges.setCantidad(cant);
+
+                session.update(ges);
+
+                tx.commit();
+
+                JOptionPane.showMessageDialog(null, "Gestión " + ges.getId() + " Actiualizada",
+                        "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                actualizaComboGestion();
+
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Gestión No localizada",
+                        "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (NumberFormatException e) {
+            cant = -1;
+            JOptionPane.showMessageDialog(null, "Solo cantidades numericas",
+                    "Error", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+
+        session.close();
+
+
+    }
+
+    private Gestion buscarGestionCod(String cod) {
+        Session session = sesion.openSession();
+
+        String hql = String.format("from Gestion where id = '%s'", cod);
+
+        Gestion ges = (Gestion) session.createQuery(hql).uniqueResult();
+
+        session.close();
+
+        return ges;
+    }
+
+    private void rellenaGestion() {
+
         int ngestion = cbGestion.getSelectedIndex();
 
-        System.out.println(ngestion);
-       if (ngestion > -1){
-           Gestion g = gestiones.get(ngestion);
+        if (ngestion > 0) {
+            Gestion g = gestiones.get(ngestion-1);
 
 
-           for (int i = 0; i < listaProveedores.size(); i++) {
-               if (listaProveedores.get(i).getCodigo().equals(g.getProveedoresByCodproveedor().getCodigo())) {
-                   cbCodigoProv.setSelectedIndex(i);
-               }
+            for (int i = 0; i < listaProveedores.size(); i++) {
+                if (listaProveedores.get(i).getCodigo().equals(g.getProveedoresByCodproveedor().getCodigo())) {
+                    cbCodigoProv.setSelectedIndex(i+1);
+                }
 
-           }
+            }
 
-           jtProvLinea1.setText(g.getProveedoresByCodproveedor().getNombre() + " " + g.getProveedoresByCodproveedor().getApellidos());
-           jtProvLinea2.setText(g.getProveedoresByCodproveedor().getDireccion());
+            jtProvLinea1.setText(g.getProveedoresByCodproveedor().getNombre() + " " + g.getProveedoresByCodproveedor().getApellidos());
+            jtProvLinea2.setText(g.getProveedoresByCodproveedor().getDireccion());
 
 
-       }
+            for (int i = 0; i < listaProyectos.size(); i++) {
+                if (listaProyectos.get(i).getCodigo().equals(g.getProyectosByCodproyecto().getCodigo())) {
+                    cbProyecto.setSelectedIndex(i+1);
+                }
 
+            }
+
+            jtProyLinea1.setText(g.getProyectosByCodproyecto().getNombre());
+            jtProyLinea2.setText(g.getProyectosByCodproyecto().getCiudad());
+
+
+            for (int i = 0; i < listaPiezas.size(); i++) {
+                if (listaPiezas.get(i).getCodigo().equals(g.getPiezasByCodpieza().getCodigo())) {
+                    cbPiezas.setSelectedIndex(i+1);
+                }
+
+            }
+
+            jtPieLinea1.setText(g.getPiezasByCodpieza().getNombre() + " " + g.getPiezasByCodpieza().getPrecio());
+            jtPieLinea2.setText(g.getPiezasByCodpieza().getDescripcion());
+
+
+            jtCantidad.setText(String.valueOf(g.getCantidad()));
+
+        }
 
     }
 
@@ -165,6 +258,8 @@ public class VentanaPieProvProy extends JFrame {
                         JOptionPane.showMessageDialog(null, "Gestion Insertada",
                                 "Info", JOptionPane.INFORMATION_MESSAGE);
 
+                        actualizaComboGestion();
+
                     } catch (ConstraintViolationException ignored) {
 
                     }
@@ -174,14 +269,22 @@ public class VentanaPieProvProy extends JFrame {
                 }
                 session.close();
 
-            }else {
-                JOptionPane.showMessageDialog(null, "Solo Cantidades con decimales",
+            } else {
+                JOptionPane.showMessageDialog(null, "Solo Cantidades numericas",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios para insertar",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void actualizaComboGestion() {
+        cbGestion.removeAllItems();
+        cbCodigoProv.removeAllItems();
+        cbProyecto.removeAllItems();
+        cbPiezas.removeAllItems();
+        cargarListas();
     }
 
     private void cargarListas() {
@@ -252,9 +355,12 @@ public class VentanaPieProvProy extends JFrame {
         }
         cbPiezas.setSelectedIndex(0);
 
+        cbGestion.addItem("Elige Codigo");
         for (Gestion gestion : gestiones) {
-            cbGestion.addItem(gestion.getId());
+            cbGestion.addItem(String.valueOf(gestion.getId()));
         }
+
+        jtCantidad.setText("");
 
     }
 }
