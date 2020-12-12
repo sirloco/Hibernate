@@ -1,5 +1,6 @@
 package vistas;
 
+import accesodatos.Gestion;
 import accesodatos.HibernateUtil;
 import accesodatos.Proyectos;
 import org.hibernate.Session;
@@ -158,13 +159,45 @@ public class VentanaProyectos extends JFrame {
 
                 Transaction tx = session.beginTransaction();
 
-                //Se crea la sentencia
-                String hqlDel = String.format("delete from Proyectos e where e.codigo = '%s'", pro.getCodigo());
 
-                session.createQuery(hqlDel).executeUpdate();
+                String hql = String.format("from Gestion where proyectosByCodproyecto.codigo = '%s'",pro.getCodigo());
 
-                JOptionPane.showMessageDialog(null, "Proyecto " + pro.getNombre() + " Eliminado",
-                        "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                LinkedList<Gestion> gestiones = new LinkedList<>();
+
+                for (Object o : session.createQuery(hql).list()) {
+                    gestiones.add((Gestion) o);
+                }
+
+                boolean confirm;
+                if (gestiones.size() > 0){
+                    int confirmado = JOptionPane.showConfirmDialog(
+                            null,
+                            "Se eliminaran "+gestiones.size()+" filas en la tabla gestion ¿seguro que quieres continuar?");
+
+                    if (JOptionPane.OK_OPTION == confirmado) {
+                        System.out.println("confirmado");
+                        confirm = true;
+                    }
+
+                    else {
+                        System.out.println("vale... no borro nada...");
+                        confirm = false;
+                    }
+                }else{
+                    confirm = true;
+                }
+
+                if (confirm) {
+
+                    //Se crea la sentencia
+                    String hqlDel = String.format("delete from Proyectos e where e.codigo = '%s'", pro.getCodigo());
+
+                    session.createQuery(hqlDel).executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Proyecto " + pro.getNombre() + " Eliminado",
+                            "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
 
                 tx.commit();
                 session.close();
@@ -238,7 +271,7 @@ public class VentanaProyectos extends JFrame {
 
             Proyectos pro = new Proyectos();
 
-            pro.setCodigo(codigo);
+            pro.setCodigo(codigo.toUpperCase());
             pro.setNombre(nombre);
             pro.setCiudad(ciudad);
 

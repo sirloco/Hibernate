@@ -173,10 +173,10 @@ public class VentanaPrincipal extends JFrame {
 
         menuBar.add(ayuda);
 
-        /*ayuda.addActionListener((event) -> {
-            VentanaConsultaProyCiu vproyciu = new VentanaConsultaProyCiu();
-            vproyciu.setVisible(true);
-        });*/
+        ayuda.addActionListener((event) -> {
+            VentanaAyuda vAyuda = new VentanaAyuda();
+            vAyuda.setVisible(true);
+        });
 
 
 

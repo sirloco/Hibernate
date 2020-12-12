@@ -11,8 +11,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class VentanaPieProvProy extends JFrame {
     private JPanel jpPrincipal;
@@ -97,6 +99,92 @@ public class VentanaPieProvProy extends JFrame {
         cbGestion.addActionListener(e -> {
             rellenaGestion();
         });
+        bEliminar.addActionListener(e -> {
+            eliminaGestion(Objects.requireNonNull(cbGestion.getSelectedItem()).toString());
+        });
+        bListado.addActionListener(e -> {
+            listadoGestiones();
+        });
+    }
+
+    private void listadoGestiones() {
+
+        Session session = sesion.openSession();
+
+        String hql = String.format("from %s", "Gestion");
+
+        LinkedList<Gestion> listGestion = new LinkedList<>();
+
+        for (Object o : session.createQuery(hql).list()) {
+            listGestion.add((Gestion) o);
+        }
+
+        if (listGestion.size() > 0) {
+
+            VentanaListadoGestion vlg = new VentanaListadoGestion(listGestion);
+
+            vlg.setVisible(true);
+
+
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay Gestiones",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        session.close();
+
+    }
+
+    private void eliminaGestion(String cod) {
+
+        int codigo = Integer.parseInt(cod);
+
+        if (codigo > 0) {
+
+            Gestion ges = buscarGestionCod(codigo);
+
+            if (ges != null) {
+
+                Session session = sesion.openSession();
+
+                Transaction tx = session.beginTransaction();
+
+                //Se crea la sentencia
+                String hqlDel = String.format("delete from Gestion e where e.id = '%s'", ges.getId());
+
+                session.createQuery(hqlDel).executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Gestion " + ges.getId() + " Eliminada",
+                        "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                tx.commit();
+                session.close();
+
+                actualizaComboGestion();
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Codigo Gestion inexistente",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } else {
+
+            JOptionPane.showMessageDialog(null, "Codigo Gestion necesario",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
+    private Gestion buscarGestionCod(int cod) {
+        Session session = sesion.openSession();
+
+        String hql = String.format("from Gestion where id = '%d'", cod);
+
+        Gestion ges = (Gestion) session.createQuery(hql).uniqueResult();
+
+        session.close();
+
+        return ges;
     }
 
     private void modificaGestion() {
@@ -213,8 +301,18 @@ public class VentanaPieProvProy extends JFrame {
 
             jtCantidad.setText(String.valueOf(g.getCantidad()));
 
+        }else{
+            limpiaDatos();
         }
 
+    }
+
+    private void limpiaDatos() {
+        cbGestion.setSelectedIndex(0);
+        cbCodigoProv.setSelectedIndex(0);
+        cbPiezas.setSelectedIndex(0);
+        cbProyecto.setSelectedIndex(0);
+        jtCantidad.setText("");
     }
 
     private void insertaGestion() {

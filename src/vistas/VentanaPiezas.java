@@ -1,5 +1,6 @@
 package vistas;
 
+import accesodatos.Gestion;
 import accesodatos.HibernateUtil;
 import accesodatos.Piezas;
 import org.hibernate.Session;
@@ -167,13 +168,47 @@ public class VentanaPiezas extends JFrame {
 
                 Transaction tx = session.beginTransaction();
 
-                //Se crea la sentencia
-                String hqlDel = String.format("delete from Piezas e where e.codigo = '%s'", pie.getCodigo());
 
-                session.createQuery(hqlDel).executeUpdate();
+                String hql = String.format("from Gestion where piezasByCodpieza.codigo = '%s'",pie.getCodigo());
 
-                JOptionPane.showMessageDialog(null, "Pieza " + pie.getNombre() + " Eliminada",
-                        "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                LinkedList<Gestion> gestiones = new LinkedList<>();
+
+                for (Object o : session.createQuery(hql).list()) {
+                    gestiones.add((Gestion) o);
+                }
+
+                boolean confirm;
+                if (gestiones.size() > 0){
+                    int confirmado = JOptionPane.showConfirmDialog(
+                            null,
+                            "Se eliminaran "+gestiones.size()+" filas en la tabla gestion ¿seguro que quieres continuar?");
+
+                    if (JOptionPane.OK_OPTION == confirmado) {
+                        System.out.println("confirmado");
+                        confirm = true;
+                    }
+
+                    else {
+                        System.out.println("vale... no borro nada...");
+                        confirm = false;
+                    }
+                }else{
+                    confirm = true;
+                }
+
+                if (confirm) {
+
+
+                    //Se crea la sentencia
+                    String hqlDel = String.format("delete from Piezas e where e.codigo = '%s'", pie.getCodigo());
+
+                    session.createQuery(hqlDel).executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Pieza " + pie.getNombre() + " Eliminada",
+                            "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                }
 
                 tx.commit();
                 session.close();
@@ -251,7 +286,7 @@ public class VentanaPiezas extends JFrame {
 
             Piezas pie = new Piezas();
 
-            pie.setCodigo(codigo);
+            pie.setCodigo(codigo.toUpperCase());
             pie.setNombre(nombre);
             pie.setPrecio(precio);
             pie.setDescripcion(descripcion);
