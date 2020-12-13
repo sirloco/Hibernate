@@ -193,7 +193,7 @@ public class VentanaPieProvProy extends JFrame {
 
         Transaction tx = session.beginTransaction();
 
-        String codigo = String.valueOf(cbGestion.getSelectedIndex());
+        String codigo = Objects.requireNonNull(cbGestion.getSelectedItem()).toString();
 
         System.out.println(codigo);
 
@@ -302,7 +302,7 @@ public class VentanaPieProvProy extends JFrame {
             jtCantidad.setText(String.valueOf(g.getCantidad()));
 
         }else{
-            limpiaDatos();
+            //limpiaDatos();
         }
 
     }
